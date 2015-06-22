@@ -14,10 +14,10 @@ public class Scenario {
 	
 	private String name;
 	private String type;
-	private List<JSONObject> stepsJSON = new ArrayList<JSONObject>();
 	private List<Step> steps = new ArrayList<Step>();
 	
 	public Scenario(String scenarioName, String scenarioType, JSONArray scenarioSteps) {
+	    List<JSONObject> stepsJSON = new ArrayList<JSONObject>();
 		this.name = scenarioName;
 		this.type = scenarioType;
 		stepsJSON = scenarioSteps;
