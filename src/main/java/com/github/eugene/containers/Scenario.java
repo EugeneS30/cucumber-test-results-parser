@@ -3,9 +3,13 @@ package com.github.eugene.containers;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.experimental.Builder;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+@Getter
 public class Scenario {
 	
 	private String name;
@@ -13,23 +17,21 @@ public class Scenario {
 	private List<JSONObject> stepsJSON = new ArrayList<JSONObject>();
 	private List<Step> steps = new ArrayList<Step>();
 	
-	public Scenario(String name, String type, JSONArray steps) {
-		this.name = name;
-		this.type = type;
-		stepsJSON = steps;
+	public Scenario(String scenarioName, String scenarioType, JSONArray scenarioSteps) {
+		this.name = scenarioName;
+		this.type = scenarioType;
+		stepsJSON = scenarioSteps;
 		
-		initiateSteps();
-	}
-	
-	private void initiateSteps() {
 		for (JSONObject ob : stepsJSON) {
-			String name = (String) ob.get("name");
-			JSONObject result = (JSONObject) ob.get("result");
-						
-			steps.add(new Step(name, result));
-		}
+            String name = (String) ob.get("name");
+            JSONObject result = (JSONObject) ob.get("result");
+                        
+            steps.add(new Step(name, result));
+        }
+		
 	}
 	
+
 	public boolean isFailed() {
 		for (Step step : steps) {
 			if (step.isFailed()) {
