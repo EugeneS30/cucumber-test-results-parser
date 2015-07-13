@@ -5,29 +5,70 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.experimental.Builder;
+import lombok.extern.slf4j.Slf4j;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 @Getter
+@Slf4j
 public class Scenario {
-	
-	private String name;
-	private String type;
+	private String scenarioName;
+	private String scenarioType;
+	private List<BeforeHook> beforeHooks = new ArrayList<BeforeHook>();
+	private List<AfterHook> afterHooks = new ArrayList<AfterHook>();
 	private List<Step> steps = new ArrayList<Step>();
+	int iter = 0;
 	
-	public Scenario(String scenarioName, String scenarioType, JSONArray scenarioSteps) {
-	    List<JSONObject> stepsJSON = new ArrayList<JSONObject>();
-		this.name = scenarioName;
-		this.type = scenarioType;
-		stepsJSON = scenarioSteps;
+	public Scenario(String scenarioName, String scenarioType, JSONArray scenarioSteps, JSONArray scenarioBeforeHooks, JSONArray scenarioAfterHooks) throws NullPointerException{
+	    
+	    log.info("Scenario constructor start: " + scenarioName);
+	    log.info("Scenario type: " + scenarioType);
+
+	    this.scenarioName = scenarioName;
+        this.scenarioType = scenarioType;
+        	    
+	    if ("scenario".equals(scenarioType)) {
+	        List<JSONObject> stepsJSON = new ArrayList<JSONObject>(scenarioSteps);
+	        List<JSONObject> beforeHooksJSON = new ArrayList<JSONObject>(scenarioBeforeHooks);
+	        List<JSONObject> afterHooksJSON = new ArrayList<JSONObject>(scenarioAfterHooks);
+	        
+	        log.info("Adding steps");
+	        for (JSONObject ob : stepsJSON) {
+	            String name = (String) ob.get("name");
+	            JSONObject result = (JSONObject) ob.get("result");
+	                        
+	            steps.add(new Step(name, result));
+	        }
+	        
+	        log.info("Adding beforeHooks");
+	        for (JSONObject ob : beforeHooksJSON) {
+	            JSONObject result = (JSONObject) ob.get("result");
+	            JSONObject match = (JSONObject) ob.get("match");
+	            
+	            Long duration = (Long) result.get("duration");
+	            String status = (String) result.get("status");
+	            String location = (String) match.get("location");
+	            
+	            beforeHooks.add(new BeforeHook(duration, status, location));
+	        }
+	        
+	        log.info("Adding afterHooks");
+	        for (JSONObject ob : afterHooksJSON) {
+	            JSONObject result = (JSONObject) ob.get("result");
+	            JSONObject match = (JSONObject) ob.get("match");
+	            
+	            Long duration = (Long) result.get("duration");
+	            String status = (String) result.get("status");
+	            String location = (String) match.get("location");
+	            
+	            afterHooks.add(new AfterHook(duration, status, location));
+	        }
+	    }
+        
+	    
 		
-		for (JSONObject ob : stepsJSON) {
-            String name = (String) ob.get("name");
-            JSONObject result = (JSONObject) ob.get("result");
-                        
-            steps.add(new Step(name, result));
-        }
+		
 		
 	}
 	
