@@ -3,6 +3,7 @@ package com.github.eugene.containers;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.json.simple.JSONArray;
@@ -18,6 +19,7 @@ import org.json.simple.JSONObject;
  */
 
 @Slf4j
+@Getter
 public class FeatureFileElement {
 
     private String name;
@@ -68,5 +70,5 @@ public class FeatureFileElement {
             System.out.println(scenario.isFailed());
         }
     }
-
+   
 }
