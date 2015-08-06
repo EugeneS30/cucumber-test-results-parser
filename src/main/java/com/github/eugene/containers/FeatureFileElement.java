@@ -23,7 +23,7 @@ import org.json.simple.JSONObject;
 @Slf4j
 @Getter
 public class FeatureFileElement {
-
+    
     private String featureFileElementName;
     private String featureFileElementUri;
     private List<JSONObject> scenariosJSON = new ArrayList<JSONObject>();
@@ -42,7 +42,7 @@ public class FeatureFileElement {
 
         initiateScenarios();
     }
-
+    
     private void initiateScenarios() {
         for (JSONObject ob : scenariosJSON) {
             String scenarioName = (String) ob.get("name");
@@ -52,7 +52,7 @@ public class FeatureFileElement {
             JSONArray scenarioAfterHooks = (JSONArray) ob.get("after");
             
             if ("scenario".equals(scenarioType)) {
-                scenarios.add(new Scenario(scenarioName, scenarioType, scenarioSteps, scenarioBeforeHooks, scenarioAfterHooks));
+                scenarios.add(new Scenario(scenarioName, featureFileElementUri, scenarioType, scenarioSteps, scenarioBeforeHooks, scenarioAfterHooks));
             }
             else if ("background".equals(scenarioType)) {
                 backgroundScenarios.add(new BackgroundScenario(scenarioName, scenarioType, scenarioSteps, scenarioBeforeHooks, scenarioAfterHooks));
