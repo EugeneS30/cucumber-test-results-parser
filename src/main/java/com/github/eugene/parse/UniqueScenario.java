@@ -8,13 +8,24 @@ import com.github.eugene.containers.Scenario;
 public class UniqueScenario {
     private int buildNum;
     private Scenario scenario;
-    private boolean scenarioResult;
+    private boolean isFailed;
     
-    public UniqueScenario(int buildNum, Scenario scenario, boolean scenarioResult) {
+    public UniqueScenario(int buildNum, Scenario scenario, boolean isFailed) {
         this.buildNum = buildNum;
         this.scenario = scenario;
-        this.scenarioResult = scenarioResult;
+        this.isFailed = isFailed;
     }
     
+    public String generateUriScenarioPair() {
+        return scenario.getUri() + "," + scenario.getScenarioName();
+    }
+    
+    public String getScenarioName() {
+        return scenario.getScenarioName();
+    }
+    
+    public String getScenarioUri() {
+        return scenario.getUri();
+    }
     
 }
