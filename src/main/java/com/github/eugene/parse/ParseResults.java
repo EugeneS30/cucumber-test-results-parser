@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.github.eugene.containers.FeatureFileElement;
+import com.github.eugene.containers.Scenario;
 
 @Slf4j
 public class ParseResults {
@@ -78,16 +80,22 @@ public class ParseResults {
             catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (ParseException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
         }
         
-       
+        List<UniqueScenario> allBuildResultsUnique = new ArrayList<UniqueScenario>();
+        
+        
+        for (Entry<Integer, List<FeatureFileElement>> build: buildsResults.entrySet()) {
+            for (FeatureFileElement ffe : build.getValue()){
+                for (Scenario scenario : ffe.getScenarios()) {
+                    allBuildResultsUnique.add(new UniqueScenario(build.getKey(), scenario, scenario.isFailed()));
+                }
+            }
+        }
         
         Workbook wb = new XSSFWorkbook();
 
