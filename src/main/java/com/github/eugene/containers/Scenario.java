@@ -14,19 +14,25 @@ import org.json.simple.JSONObject;
 @Slf4j
 public class Scenario {
 	private String scenarioName;
+	private String uri;
 	private String scenarioType;
 	private List<BeforeHook> beforeHooks = new ArrayList<BeforeHook>();
 	private List<AfterHook> afterHooks = new ArrayList<AfterHook>();
 	private List<Step> steps = new ArrayList<Step>();
-	int iter = 0;
-	
-	public Scenario(String scenarioName, String scenarioType, JSONArray scenarioSteps, JSONArray scenarioBeforeHooks, JSONArray scenarioAfterHooks) throws NullPointerException{
+			
+	public Scenario(String scenarioName,
+	                String uri,
+	                String scenarioType, 
+	                JSONArray scenarioSteps, 
+	                JSONArray scenarioBeforeHooks, 
+	                JSONArray scenarioAfterHooks) throws NullPointerException {
 	    
 	    log.info("Scenario constructor start: " + scenarioName);
 	    log.info("Scenario type: " + scenarioType);
 
 	    this.scenarioName = scenarioName;
         this.scenarioType = scenarioType;
+        this.uri = uri;
         	    
 	    if ("scenario".equals(scenarioType)) {
 	        List<JSONObject> stepsJSON = new ArrayList<JSONObject>(scenarioSteps);
@@ -66,12 +72,7 @@ public class Scenario {
 	        }
 	    }
         
-	    
-		
-		
-		
 	}
-	
 
 	public boolean isFailed() {
 		for (Step step : steps) {
