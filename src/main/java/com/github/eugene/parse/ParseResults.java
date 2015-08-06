@@ -114,7 +114,7 @@ public class ParseResults {
             buildsList.add(buildNum);
         }
         
-        Map<String, List<Map<Integer, Boolean>>> finalResultsMap = new HashMap<String, List<Map<Integer, Boolean>>>();
+        //Map<String, List<Map<Integer, Boolean>>> finalResultsMap = new HashMap<String, List<Map<Integer, Boolean>>>();
         
         Workbook wb = new XSSFWorkbook();
 
@@ -136,14 +136,18 @@ public class ParseResults {
         int startCol = 2;
                 
         // Set all the column names as build numbers
-        Map<Integer, Integer> columnToBuildMapper = new HashMap<Integer, Integer>();
+        Map<Integer, Integer> buildToColumnMapper = new HashMap<Integer, Integer>();
         
         for (Integer buildNum : buildsList) {
-            columnToBuildMapper.put(buildNum, startCol);
+            
+            buildToColumnMapper.put(buildNum, startCol);
+            
             Cell cell = topRow.createCell(startCol);
             cell.setCellValue(buildNum);
             startCol++;
         }
+        
+        Map<String, Integer> scenarioNameToRowMapper = new HashMap<String, Integer>();
         
         int currentRowNumber = 1;
         for (String uniqueScenario : uniqueScenarioNamesSet) {
@@ -152,34 +156,45 @@ public class ParseResults {
             Cell currentFilenameCell = currentRow.createCell(0);
             Cell currentScenarioCell = currentRow.createCell(1);
             
+            scenarioNameToRowMapper.put(uniqueScenario, currentRowNumber);
+            
+            //TODO use constants here instead of 0 and 1
             currentFilenameCell.setCellValue(uniqueScenario.split(",")[0]); //set the feature file path
             currentScenarioCell.setCellValue(uniqueScenario.split(",")[1]); //set the scenario name
             currentRowNumber++;
         }
         
-//        for (UniqueScenario entry : allBuildResults) {
-//            System.out.println("=-=-=-=-=-=-=-=-=-=-=");
-//            
-//            //List<FeatureFileElement> featureFileElements = entry.getValue();
-//
-//            int buildNum = entry.getBuildNum();
-//            Scenario scenario = entry.getScenario();
-//            boolean scenarioFailStatus = entry.isFailed();
-//            
+        
+        
+        //int currentCol = -1;
+        //int currentRow = -1;
+        for (UniqueScenario entry : allBuildResults) {
+            System.out.println("=-=-=-=-=-=-=-=-=-=-=");
+            
+            //List<FeatureFileElement> featureFileElements = entry.getValue();
+
+            int buildNum = entry.getBuildNum();
+            Scenario scenario = entry.getScenario();
+            boolean scenarioFailStatus = entry.isFailed();
+            
 //            if (finalResultsMap.get(scenario.getUri()) != null) {
 //                finalResultsMap.put(buildNum, scenario.isFailed())
 //            }
-//
-//            Cell cell = row.createCell(startCol);
-//            cell.setCellValue(key);
-//            
-//            Row rowTest = sheet.createRow(startRow);
-//            Cell cellBuildResult = rowTest.createCell(startCol);
-//            //cellBuildResult.setCellValue();
-//            
-//            /*
-//             * Iterate over FeatureFileElements (currently 58)
-//             */
+            
+            int currentColNum = buildToColumnMapper.get(buildNum);
+            int currentRowNum = scenarioNameToRowMapper.get(scenario);
+            
+            Row currentRow = sheet.createRow(currentRowNum);
+            
+            Cell cell = currentRow.createCell(currentColNum);
+            cell.setCellValue(scenarioFailStatus);
+            
+            
+            //cellBuildResult.setCellValue();
+            
+            /*
+             * Iterate over FeatureFileElements (currently 58)
+             */
 //            int j = 0;
 //            for (FeatureFileElement ffe : featureFileElements) {
 //                j++;
@@ -191,19 +206,19 @@ public class ParseResults {
 //                
 //            }
 //            System.out.println(j);
-//
-//
-////            for (FeatureFileElement featureElement : featureElements) {
-////                Row rowTest = sheet.createRow(startRow);
-////                for (Scenario scenario : featureElement.getScenarios()) {
-////                    Cell cellBuildResult = rowTest.createCell(startCol);
-////                    cellBuildResult.setCellValue(scenario.getScenarioName() + scenario.getScenarioType());
-////                    startRow++;
-////                }
-////            }
-//
-//            startCol++ ;
-//        }
+
+
+//            for (FeatureFileElement featureElement : featureElements) {
+//                Row rowTest = sheet.createRow(startRow);
+//                for (Scenario scenario : featureElement.getScenarios()) {
+//                    Cell cellBuildResult = rowTest.createCell(startCol);
+//                    cellBuildResult.setCellValue(scenario.getScenarioName() + scenario.getScenarioType());
+//                    startRow++;
+//                }
+//            }
+
+            startCol++ ;
+        }
 
         FileOutputStream fileOut = new FileOutputStream("workbook.xlsx");
 
