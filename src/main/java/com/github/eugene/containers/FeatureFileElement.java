@@ -28,6 +28,7 @@ public class FeatureFileElement {
     private String featureFileElementUri;
     private List<JSONObject> scenariosJSON = new ArrayList<JSONObject>();
     private List<Scenario> scenarios = new ArrayList<Scenario>();
+    private List<BackgroundScenario> backgroundScenarios = new ArrayList<BackgroundScenario>();
     private String featureFileElementPath;
 
     public FeatureFileElement(String name, String uri, JSONArray scenarios) {
@@ -49,8 +50,15 @@ public class FeatureFileElement {
             JSONArray scenarioSteps = (JSONArray) ob.get("steps");
             JSONArray scenarioBeforeHooks = (JSONArray) ob.get("before");
             JSONArray scenarioAfterHooks = (JSONArray) ob.get("after");
+            
+            if ("scenario".equals(scenarioType)) {
+                scenarios.add(new Scenario(scenarioName, scenarioType, scenarioSteps, scenarioBeforeHooks, scenarioAfterHooks));
+            }
+            else if ("background".equals(scenarioType)) {
+                backgroundScenarios.add(new BackgroundScenario(scenarioName, scenarioType, scenarioSteps, scenarioBeforeHooks, scenarioAfterHooks));
+            }
 
-            scenarios.add(new Scenario(scenarioName, scenarioType, scenarioSteps, scenarioBeforeHooks, scenarioAfterHooks));
+            
         }
     }
 
