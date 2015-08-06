@@ -156,7 +156,7 @@ public class ParseResults {
             Cell currentFilenameCell = currentRow.createCell(0);
             Cell currentScenarioCell = currentRow.createCell(1);
             
-            scenarioNameToRowMapper.put(uniqueScenario, currentRowNumber);
+            scenarioNameToRowMapper.put(uniqueScenario.split(",")[1], currentRowNumber);
             
             //TODO use constants here instead of 0 and 1
             currentFilenameCell.setCellValue(uniqueScenario.split(",")[0]); //set the feature file path
@@ -182,7 +182,10 @@ public class ParseResults {
 //            }
             
             int currentColNum = buildToColumnMapper.get(buildNum);
-            int currentRowNum = scenarioNameToRowMapper.get(scenario);
+            int currentRowNum = scenarioNameToRowMapper.get(scenario.getScenarioName());
+            
+            log.info("Current cell and row:");
+            System.out.println(currentColNum + "," + currentRowNum);
             
             Row currentRow = sheet.createRow(currentRowNum);
             
