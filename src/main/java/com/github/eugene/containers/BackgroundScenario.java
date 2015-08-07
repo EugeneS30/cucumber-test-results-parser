@@ -38,7 +38,7 @@ public class BackgroundScenario {
 	        List<JSONObject> beforeHooksJSON = new ArrayList<JSONObject>(backgroundScenarioBeforeHooks);
 	        List<JSONObject> afterHooksJSON = new ArrayList<JSONObject>(backgroundScenarioAfterHooks);
 	        
-	        log.info("Adding steps");
+	        log.debug("Adding steps");
 	        for (JSONObject ob : stepsJSON) {
 	            String name = (String) ob.get("name");
 	            JSONObject result = (JSONObject) ob.get("result");
@@ -46,7 +46,7 @@ public class BackgroundScenario {
 	            steps.add(new Step(name, result));
 	        }
 	        
-	        log.info("Adding beforeHooks");
+	        log.debug("Adding beforeHooks");
 	        for (JSONObject ob : beforeHooksJSON) {
 	            JSONObject result = (JSONObject) ob.get("result");
 	            JSONObject match = (JSONObject) ob.get("match");
@@ -58,7 +58,7 @@ public class BackgroundScenario {
 	            beforeHooks.add(new BeforeHook(duration, status, location));
 	        }
 	        
-	        log.info("Adding afterHooks");
+	        log.debug("Adding afterHooks");
 	        for (JSONObject ob : afterHooksJSON) {
 	            JSONObject result = (JSONObject) ob.get("result");
 	            JSONObject match = (JSONObject) ob.get("match");
