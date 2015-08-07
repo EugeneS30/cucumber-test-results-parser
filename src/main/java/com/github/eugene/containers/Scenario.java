@@ -19,6 +19,7 @@ public class Scenario {
 	private List<BeforeHook> beforeHooks = new ArrayList<BeforeHook>();
 	private List<AfterHook> afterHooks = new ArrayList<AfterHook>();
 	private List<Step> steps = new ArrayList<Step>();
+	private String runResult;
 			
 	public Scenario(String scenarioName,
 	                String uri,
@@ -39,7 +40,7 @@ public class Scenario {
 	        List<JSONObject> beforeHooksJSON = new ArrayList<JSONObject>(scenarioBeforeHooks);
 	        List<JSONObject> afterHooksJSON = new ArrayList<JSONObject>(scenarioAfterHooks);
 	        
-	        log.info("Adding steps");
+	        log.debug("Adding steps");
 	        for (JSONObject ob : stepsJSON) {
 	            String name = (String) ob.get("name");
 	            JSONObject result = (JSONObject) ob.get("result");
@@ -47,7 +48,7 @@ public class Scenario {
 	            steps.add(new Step(name, result));
 	        }
 	        
-	        log.info("Adding beforeHooks");
+	        log.debug("Adding beforeHooks");
 	        for (JSONObject ob : beforeHooksJSON) {
 	            JSONObject result = (JSONObject) ob.get("result");
 	            JSONObject match = (JSONObject) ob.get("match");
@@ -57,9 +58,13 @@ public class Scenario {
 	            String location = (String) match.get("location");
 	            
 	            beforeHooks.add(new BeforeHook(duration, status, location));
+	            
+	            if ("pending".equalsIgnoreCase(status)) {
+	                runResult = "Pending";
+	            }
 	        }
 	        
-	        log.info("Adding afterHooks");
+	        log.debug("Adding afterHooks");
 	        for (JSONObject ob : afterHooksJSON) {
 	            JSONObject result = (JSONObject) ob.get("result");
 	            JSONObject match = (JSONObject) ob.get("match");
@@ -83,5 +88,9 @@ public class Scenario {
 		}
 		return false;
 	}
+	
+	 public String generateUriScenarioPair() {
+	        return uri + "," + scenarioName;
+	    }
 
 }
