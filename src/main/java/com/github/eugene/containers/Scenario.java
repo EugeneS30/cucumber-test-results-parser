@@ -21,6 +21,7 @@ public class Scenario {
 	private List<Step> steps = new ArrayList<Step>();
 	private String runResult;
 			
+	// CONSTRUCTOR
 	public Scenario(String scenarioName,
 	                String uri,
 	                String scenarioType, 
@@ -28,8 +29,8 @@ public class Scenario {
 	                JSONArray scenarioBeforeHooks, 
 	                JSONArray scenarioAfterHooks) throws NullPointerException {
 	    
-	    log.info("Scenario constructor start: " + scenarioName);
-	    log.info("Scenario type: " + scenarioType);
+	    log.debug("Scenario constructor start: " + scenarioName);
+	    log.debug("Scenario type: " + scenarioType);
 
 	    this.scenarioName = scenarioName;
         this.scenarioType = scenarioType;
@@ -60,7 +61,7 @@ public class Scenario {
 	            beforeHooks.add(new BeforeHook(duration, status, location));
 	            
 	            if ("pending".equalsIgnoreCase(status)) {
-	                runResult = "Pending";
+	                runResult = "pending";
 	            }
 	        }
 	        
@@ -76,6 +77,18 @@ public class Scenario {
 	            afterHooks.add(new AfterHook(duration, status, location));
 	        }
 	    }
+	    
+	    if (!"pending".equalsIgnoreCase(runResult)) {
+	        
+	        runResult = "pass";
+	        for (Step step : steps) {
+	            if (step.isFailed()) {
+	                runResult = "fail";
+	                continue;
+	            }
+	        }
+	    }
+	    
         
 	}
 
