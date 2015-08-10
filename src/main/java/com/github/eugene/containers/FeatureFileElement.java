@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.github.eugene.containers.Scenario;
+
 /**
  * FeatureFileElement container
  * <p>
