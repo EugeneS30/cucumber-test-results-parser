@@ -32,8 +32,8 @@ public class FeatureFileElement {
     private String featureFileElementPath;
 
     public FeatureFileElement(String name, String uri, JSONArray scenarios) {
-        log.info("==============================");
-        log.info("FeatureFileElement constructor start" + name);
+        log.debug("==============================");
+        log.debug("FeatureFileElement constructor start" + name);
 
         this.featureFileElementName = name;
         this.featureFileElementUri = uri;
