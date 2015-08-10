@@ -27,8 +27,8 @@ public class BackgroundScenario {
 	        JSONArray backgroundScenarioBeforeHooks, 
 	        JSONArray backgroundScenarioAfterHooks) throws NullPointerException {
 	    
-	    log.info("Scenario constructor start: " + backgroundScenarioName);
-	    log.info("Scenario type: " + backgroundScenarioType);
+	    log.debug("Scenario constructor start: " + backgroundScenarioName);
+	    log.debug("Scenario type: " + backgroundScenarioType);
 
 	    this.scenarioName = backgroundScenarioName;
         this.scenarioType = backgroundScenarioType;
