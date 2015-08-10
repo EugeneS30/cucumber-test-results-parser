@@ -58,6 +58,8 @@ public class ParseResults {
         
         for (File buildPath : buildsDir) {
             int buildNumber = Integer.parseInt(buildPath.getName().toString());
+            
+            log.info("Parsing buildResults: " + buildNumber);
 
             try {
                 FileReader reader = new FileReader(String.join("\\", buildPath.toString(), jsonRelativePath));
@@ -72,7 +74,7 @@ public class ParseResults {
 
                 int iter = 0;
                 for (JSONObject featureFileElement : allJSONFileElementsList) {
-                    log.info("Processing new featureFileElement: " + iter);
+                    log.debug("Processing new featureFileElement: " + iter);
                     iter++ ;
                     String name = (String) featureFileElement.get("name");
                     String uri = (String) featureFileElement.get("uri");
@@ -207,11 +209,11 @@ public class ParseResults {
             currentCell.setCellValue(scenarioRunResult);
             
             if ("pass".equals(scenarioRunResult)) {
-                currentCell.setCellStyle(fillColorRed);
+                currentCell.setCellStyle(fillColorGreen);
             }
             
             else if ("fail".equals(scenarioRunResult)) {
-                currentCell.setCellStyle(fillColorGreen);
+                currentCell.setCellStyle(fillColorRed);
             }
             
             else if ("pending".equalsIgnoreCase(scenarioRunResult)) {
