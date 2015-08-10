@@ -61,7 +61,7 @@ public class ParseResultsTest {
         for (File buildPath : buildsDir) {
             int buildNumber = Integer.parseInt(buildPath.getName().toString());
             
-            log.info("Parsing buildResults: " + buildNumber);
+            //log.info("Parsing buildResults: " + buildNumber);
 
             try {
                 FileReader reader = new FileReader(String.join("\\", buildPath.toString(), jsonRelativePath));
