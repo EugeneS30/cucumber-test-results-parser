@@ -101,9 +101,4 @@ public class FeatureFileElement {
 
         return scenarioResultPairs;
     }
-    
-//    public List<Scenario> getScenarios() {
-//        return scenarios;
-//    }
-
 }
