@@ -88,8 +88,6 @@ public class Scenario {
 	            }
 	        }
 	    }
-	    
-        
 	}
 
 	public boolean isFailed() {
