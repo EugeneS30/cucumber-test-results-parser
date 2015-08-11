@@ -42,6 +42,10 @@ public class FeatureFileElement {
         initiateScenarios();
     }
     
+    public List<Scenario> getScenarios() {
+        return scenarios;
+    }
+    
     private void initiateScenarios() {
         for (JSONObject ob : scenariosJSON) {
             String scenarioName = (String) ob.get("name");
@@ -101,7 +105,5 @@ public class FeatureFileElement {
         return scenarioResultPairs;
     }
     
-    public List<Scenario> getScenarios() {
-        return scenarios;
-    }
+    
 }
