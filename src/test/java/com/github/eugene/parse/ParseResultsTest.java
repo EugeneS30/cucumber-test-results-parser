@@ -42,24 +42,29 @@ import com.github.eugene.containers.Scenario;
 @Slf4j
 public class ParseResultsTest {
 
-    // private static final String filePath =
-    // "C:\\Users\\Polar\\Google Drive\\work\\376\\cucumber.json";
     private static final String buildsDirPath = "C:\\.jenkins\\jobs\\Connect Automated Functional Tests - Firefox 32\\builds";
     private static final String jsonRelativePath = "\\htmlreports\\Functional_Test_Report\\cucumber.json";
-
-    // private static final String myDirectoryPath = "C:\\Users\\Polar\\Google Drive\\work";
 
     @Test
     public void testFunction() throws IOException {
         
         File dir = new File(buildsDirPath);
         File[] buildsDir = dir.listFiles();
-
-        // List<List<FeatureFileElement>> buildResults = new ArrayList<List<FeatureFileElement>>();
+        
         Map<Integer, List<FeatureFileElement>> buildsResults = new TreeMap<Integer, List<FeatureFileElement>>(Collections.reverseOrder());
         
         for (File buildPath : buildsDir) {
-            int buildNumber = Integer.parseInt(buildPath.getName().toString());
+            
+            int buildNumber = -1; //setting dummy value 
+            
+            try {
+                buildNumber = Integer.parseInt(buildPath.getName().toString());
+            }
+            catch (NumberFormatException e) {
+                log.error("Invalid folder name: " + buildPath.getName().toString());
+                continue;
+            }
+            
             
             log.info("Parsing buildResults: " + buildPath);
 
