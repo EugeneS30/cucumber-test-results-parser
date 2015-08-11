@@ -21,7 +21,6 @@ import org.json.simple.JSONObject;
  */
 
 @Slf4j
-//@Getter
 public class FeatureFileElement {
     
     private String featureFileElementName;
