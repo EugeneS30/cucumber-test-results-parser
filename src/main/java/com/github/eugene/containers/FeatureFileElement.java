@@ -21,7 +21,7 @@ import org.json.simple.JSONObject;
  */
 
 @Slf4j
-@Getter
+//@Getter
 public class FeatureFileElement {
     
     private String featureFileElementName;
@@ -67,8 +67,8 @@ public class FeatureFileElement {
         StringBuilder returnString = new StringBuilder();
 
         returnString.append("Name:" + featureFileElementName + "\n");
-        returnString.append(" uri:" + featureFileElementUri + "\n");
-        returnString.append(" Steps:" + scenarios + "\n");
+        returnString.append("uri:" + featureFileElementUri + "\n");
+        returnString.append("Steps:" + scenarios + "\n");
 
         return returnString.toString();
     }
@@ -100,5 +100,9 @@ public class FeatureFileElement {
         }
 
         return scenarioResultPairs;
+    }
+    
+    public List<Scenario> getScenarios() {
+        return scenarios;
     }
 }
