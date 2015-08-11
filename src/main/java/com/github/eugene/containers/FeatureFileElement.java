@@ -37,8 +37,8 @@ public class FeatureFileElement {
         log.debug("==============================");
         log.debug("FeatureFileElement constructor start" + name);
 
-        this.featureFileElementName = name;
-        this.featureFileElementUri = uri;
+        featureFileElementName = name;
+        featureFileElementUri = uri;
         scenariosJSON = scenarios;
         featureFileElementPath = name + "," + uri;
 
