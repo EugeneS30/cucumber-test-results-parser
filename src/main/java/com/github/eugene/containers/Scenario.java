@@ -22,7 +22,7 @@ public class Scenario {
 	private String runResult; 
 			
 	// CONSTRUCTOR
-	public Scenario(String scenarioName,
+	public Scenario(String scenarioName, 
 	                String uri,
 	                String scenarioType, 
 	                JSONArray scenarioSteps, 
