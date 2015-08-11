@@ -5,7 +5,7 @@ import lombok.Getter;
 import com.github.eugene.containers.Scenario;
 
 @Getter
-public class UniqueScenario {
+public class UniqueScenario { 
     private int buildNum;
     private Scenario scenario;
     private String runResult;
