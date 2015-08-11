@@ -65,7 +65,6 @@ public class ParseResultsTest {
                 continue;
             }
             
-            
             log.info("Parsing buildResults: " + buildPath);
 
             try {
@@ -98,7 +97,7 @@ public class ParseResultsTest {
             }
 
             catch (FileNotFoundException e) {
-                e.printStackTrace();
+                log.error("File not found: " + buildPath.toString());
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ParseException e) {
@@ -251,7 +250,8 @@ public class ParseResultsTest {
         resultsSheet.setColumnWidth(1, 20000);
         
         FileOutputStream fileOut = new FileOutputStream("workbook.xlsx");
-
+        
+        log.info("Writing the file");
         wb.write(fileOut);
         fileOut.close();
     }
