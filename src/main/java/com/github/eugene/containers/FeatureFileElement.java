@@ -16,7 +16,7 @@ import org.json.simple.JSONObject;
  * <p>
  * Contains all data from the results of a single feature file
  * 
- * @author eugene.shragovich
+ * @author eugene.shragovich 
  *
  */
 
