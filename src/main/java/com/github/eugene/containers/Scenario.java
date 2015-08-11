@@ -118,7 +118,7 @@ public class Scenario {
 	 
 	 public String getRunResult() {
          return runResult;
-     }
+     } 
 	 
 
 }
