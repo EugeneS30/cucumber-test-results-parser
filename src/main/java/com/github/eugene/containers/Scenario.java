@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-@Getter
+//@Getter
 @Slf4j
 public class Scenario {
 	private String scenarioName;
@@ -103,5 +103,22 @@ public class Scenario {
 	 public String generateUriScenarioPair() {
 	        return uri + "," + scenarioName;
 	    }
+	 
+	 public String getScenarioType() {
+	     return scenarioType;
+	 }
+	 
+	 public String getScenarioName() {
+         return scenarioName;
+     }
+	 
+	 public String getUri() {
+         return uri;
+     }
+	 
+	 public String getRunResult() {
+         return runResult;
+     }
+	 
 
 }
