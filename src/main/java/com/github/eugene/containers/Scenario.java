@@ -33,7 +33,7 @@ public class Scenario {
 	    log.debug("Scenario type: " + scenarioType);
 
 	    this.scenarioName = scenarioName;
-        this.scenarioType = scenarioType;
+        this.scenarioType = scenarioType; 
         this.uri = uri;
         	    
 	    if ("scenario".equals(scenarioType)) {
