@@ -46,7 +46,7 @@ public class FeatureFileElement {
     }
     
     private void initiateScenarios() {
-        for (JSONObject ob : scenariosJSON) { 
+        for (JSONObject ob : scenariosJSON) {
             String scenarioName = (String) ob.get("name");
             String scenarioType = (String) ob.get("type");
             JSONArray scenarioSteps = (JSONArray) ob.get("steps");

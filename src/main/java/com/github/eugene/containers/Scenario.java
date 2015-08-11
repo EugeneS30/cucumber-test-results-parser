@@ -23,7 +23,7 @@ public class Scenario {
 			
 	// CONSTRUCTOR
 	public Scenario(String scenarioName,
-	                String uri, 
+	                String uri,
 	                String scenarioType, 
 	                JSONArray scenarioSteps, 
 	                JSONArray scenarioBeforeHooks, 
