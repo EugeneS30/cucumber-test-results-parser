@@ -3,17 +3,16 @@ package com.github.eugene.containers;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.experimental.Builder;
-import lombok.extern.slf4j.Slf4j;
 
+import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-@Getter
-@Slf4j
+
 public class BackgroundScenario {
+    final static Logger log = Logger.getLogger(BackgroundScenario.class);
+    
 	private String scenarioName;
 	private String scenarioType;
 	private List<BeforeHook> beforeHooks = new ArrayList<BeforeHook>();

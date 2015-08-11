@@ -3,14 +3,13 @@ package com.github.eugene.containers;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.experimental.Builder;
-import lombok.extern.slf4j.Slf4j;
-
+import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-@Slf4j
 public class Scenario {
+    final static Logger log = Logger.getLogger(Scenario.class);
+    
 	private String scenarioName;
 	private String uri;
 	private String scenarioType;

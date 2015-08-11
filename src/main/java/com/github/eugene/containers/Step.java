@@ -1,11 +1,10 @@
 package com.github.eugene.containers;
 
-import lombok.extern.slf4j.Slf4j;
-
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 
-@Slf4j
 public class Step {
+    final static Logger log = Logger.getLogger(Step.class);
 
 	private String name;
 	private String result;

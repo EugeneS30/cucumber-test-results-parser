@@ -5,9 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-
+import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -20,8 +18,10 @@ import org.json.simple.JSONObject;
  *
  */
 
-@Slf4j
 public class FeatureFileElement {
+
+    final static Logger log = Logger.getLogger(FeatureFileElement.class);
+    
     
     private String featureFileElementName;
     private String featureFileElementUri;
