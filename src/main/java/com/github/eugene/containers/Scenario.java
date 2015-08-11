@@ -19,7 +19,7 @@ public class Scenario {
 	private List<BeforeHook> beforeHooks = new ArrayList<BeforeHook>();
 	private List<AfterHook> afterHooks = new ArrayList<AfterHook>();
 	private List<Step> steps = new ArrayList<Step>();
-	private String runResult;
+	private String runResult; 
 			
 	// CONSTRUCTOR
 	public Scenario(String scenarioName,
