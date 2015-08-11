@@ -3,14 +3,12 @@ package com.github.eugene.containers;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
 import lombok.experimental.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-//@Getter
 @Slf4j
 public class Scenario {
 	private String scenarioName;
