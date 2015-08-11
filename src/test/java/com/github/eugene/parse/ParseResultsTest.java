@@ -251,7 +251,7 @@ public class ParseResultsTest {
         
         FileOutputStream fileOut = new FileOutputStream("workbook.xlsx");
         
-        log.info("Writing the file"); 
+        log.info("Writing the file");  
         wb.write(fileOut);
         fileOut.close();
     }
