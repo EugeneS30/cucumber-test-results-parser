@@ -1,10 +1,7 @@
 package com.github.eugene.parse;
 
-import lombok.Getter;
-
 import com.github.eugene.containers.Scenario;
 
-@Getter
 public class UniqueScenario { 
     private int buildNum;
     private Scenario scenario;
@@ -26,6 +23,18 @@ public class UniqueScenario {
     
     public String getScenarioUri() {
         return scenario.getUri();
+    }
+    
+    public int getBuildNum() {
+        return buildNum;
+    }
+    
+    public Scenario getScenario() {
+        return scenario;
+    }
+    
+    public String getRunResult() {
+        return runResult;
     }
     
 }
