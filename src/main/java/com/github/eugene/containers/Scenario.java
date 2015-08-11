@@ -8,7 +8,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class Scenario {
-    final static Logger log = Logger.getLogger(Scenario.class);  
+    final static Logger log = Logger.getLogger(Scenario.class);
     
 	private String scenarioName;
 	private String uri;
