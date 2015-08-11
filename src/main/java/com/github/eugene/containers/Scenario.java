@@ -109,7 +109,7 @@ public class Scenario {
          return scenarioName;
      }
 	 
-	 public String getUri() {
+	 public String getUri() { 
          return uri;
      }
 	 
