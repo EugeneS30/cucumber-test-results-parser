@@ -33,10 +33,10 @@ import org.junit.Test;
 
 import com.github.eugene.containers.FeatureFileElement;
 import com.github.eugene.containers.Scenario;
-
+import com.github.eugene.containers.UniqueScenario;
 
 public class ParseResultsTest {
-    
+
     final static Logger log = Logger.getLogger(ParseResultsTest.class);
 
     private static final String buildsDirPath = "C:\\.jenkins\\jobs\\Connect Automated Functional Tests - Firefox 32\\builds";
@@ -84,8 +84,6 @@ public class ParseResultsTest {
 
                     featureFileObjectsList.add(new FeatureFileElement(name, uri, elements));
 
-                    // buildResults.add(featureFileObjectsList);
-
                 }
 
                 buildsResults.put(buildNumber, featureFileObjectsList);
@@ -113,7 +111,6 @@ public class ParseResultsTest {
         }
 
         // Generates a list of unique scenario names from all the builds.
-        // Set<String> uniqueScenarioNamesSet = new HashSet<String>();
         SortedSet<String> uniqueScenarioNamesSet = new TreeSet<String>();
 
         for (UniqueScenario scenario : allBuildResults) {
@@ -126,18 +123,37 @@ public class ParseResultsTest {
             buildsList.add(buildNum);
         }
 
+        /**
+         * EXCEL OUTPUT
+         */
+
         Workbook workbook = new XSSFWorkbook();
 
         /**
-         * Initial formatting
+         * Pre formatting (first row and column)
          */
+
+        // Fonts
+        Font fontArial = workbook.createFont();
+        fontArial.setFontHeightInPoints((short) 10);
+        fontArial.setFontName("Arial");
+
+        // Styles
+        CellStyle resultCellsStyle = workbook.createCellStyle();
+        resultCellsStyle.setFont(fontArial);
+
         Sheet resultsSheet = workbook.createSheet("Test Results");
         Sheet runStatsSheet = workbook.createSheet("Run Statistics");
+        
+        resultsSheet.createFreezePane(0, 1);
 
         Row topRow = resultsSheet.createRow(0);
 
         Cell cellFilename = topRow.createCell(0);
         Cell cellScenario = topRow.createCell(1);
+
+        // Fonts are set into a style so create a new one to use.
+        // CellStyle style = workbook.createCellStyle();
 
         cellFilename.setCellValue("Filename");
         cellScenario.setCellValue("Scenario");
@@ -204,6 +220,7 @@ public class ParseResultsTest {
 
             Cell currentCell = currentRow.createCell(currentColNum);
             currentCell.setCellValue(scenarioRunResult);
+            currentCell.setCellStyle(resultCellsStyle);
 
             if ("pass".equals(scenarioRunResult)) {
                 currentCell.setCellStyle(fillColorGreen);
@@ -225,17 +242,23 @@ public class ParseResultsTest {
         }
 
         /**
-         * Final formatting
+         * Post
          */
-        CellStyle style = workbook.createCellStyle();
-        Font font = workbook.createFont();
+        
+        int lastRowNum = resultsSheet.getLastRowNum();
+        int statsRowNum = lastRowNum++;
+        Row statsRow = resultsSheet.createRow(lastRowNum);
+        
+        Cell statsCell = statsRow.createCell(1);
+        
+        //statsCell.setCellValue("this is it!!!");
 
-        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-        style.setFont(font);
+        fontArial.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        resultCellsStyle.setFont(fontArial);
 
         for (int i = 0; i < topRow.getLastCellNum(); i++ ) {// For each cell in the row
             resultsSheet.autoSizeColumn(i);
-            topRow.getCell(i).setCellStyle(style);// Set the style
+            topRow.getCell(i).setCellStyle(resultCellsStyle);// Set the style
         }
 
         resultsSheet.setColumnWidth(1, 20000);
