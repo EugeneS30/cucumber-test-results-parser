@@ -242,8 +242,11 @@ public class ParseResultsTest {
 
         FileOutputStream fileOut = new FileOutputStream("workbook.xlsx");
 
-        log.info("Writing the file");
+        log.info("=-=-=-=-=-=-=-=");
+        log.info("Writing the results into excel file...");
+        log.info("=-=-=-=-=-=-=-=");
         wb.write(fileOut);
         fileOut.close();
+        log.info("File saved!");
     }
 }
