@@ -128,7 +128,7 @@ public class ParseResultsTest {
          */
 
         Workbook workbook = new XSSFWorkbook();
-
+        
         /**
          * Pre formatting (first row and column)
          */
@@ -137,10 +137,19 @@ public class ParseResultsTest {
         Font fontArial = workbook.createFont();
         fontArial.setFontHeightInPoints((short) 10);
         fontArial.setFontName("Arial");
-
+        //fontArial.setBoldweight(Font.BOLDWEIGHT_NORMAL);
+        
+        Font fontArialBold = workbook.createFont();
+        fontArialBold.setFontHeightInPoints((short) 10);
+        fontArialBold.setFontName("Arial");
+        fontArialBold.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        
         // Styles
         CellStyle resultCellsStyle = workbook.createCellStyle();
         resultCellsStyle.setFont(fontArial);
+        
+        CellStyle topRowStyle = workbook.createCellStyle();
+        topRowStyle.setFont(fontArialBold);
 
         Sheet resultsSheet = workbook.createSheet("Test Results");
         Sheet runStatsSheet = workbook.createSheet("Run Statistics");
@@ -185,8 +194,10 @@ public class ParseResultsTest {
 
             // TODO use constants here instead of 0 and 1
             currentFilenameCell.setCellValue(uniqueScenario.split(",")[0]); // set the feature file
+            currentFilenameCell.setCellStyle(resultCellsStyle);
                                                                             // path
             currentScenarioCell.setCellValue(uniqueScenario.split(",")[1]); // set the scenario name
+            currentScenarioCell.setCellStyle(resultCellsStyle);
             currentRowNumber++ ;
         }
 
@@ -196,12 +207,16 @@ public class ParseResultsTest {
         CellStyle foreGroundFill = workbook.createCellStyle();
 
         fillColorGreen.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
-        fillColorRed.setFillForegroundColor(IndexedColors.ROSE.getIndex());
-        fillColorYellow.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-
         fillColorGreen.setFillPattern(PatternFormatting.SOLID_FOREGROUND);
+        fillColorGreen.setFont(fontArial);
+        
+        fillColorRed.setFillForegroundColor(IndexedColors.ROSE.getIndex());
         fillColorRed.setFillPattern(CellStyle.SOLID_FOREGROUND);
-        fillColorYellow.setFillPattern(CellStyle.BIG_SPOTS);
+        fillColorRed.setFont(fontArial);
+ 
+        fillColorYellow.setFillForegroundColor(IndexedColors.LEMON_CHIFFON.getIndex());
+        fillColorYellow.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        fillColorGreen.setFont(fontArial);
 
         for (UniqueScenario entry : allBuildResults) {
 
@@ -220,13 +235,12 @@ public class ParseResultsTest {
 
             Cell currentCell = currentRow.createCell(currentColNum);
             currentCell.setCellValue(scenarioRunResult);
-            currentCell.setCellStyle(resultCellsStyle);
 
-            if ("pass".equals(scenarioRunResult)) {
+            if ("pass".equalsIgnoreCase(scenarioRunResult)) {
                 currentCell.setCellStyle(fillColorGreen);
             }
 
-            else if ("fail".equals(scenarioRunResult)) {
+            else if ("fail".equalsIgnoreCase(scenarioRunResult)) {
                 currentCell.setCellStyle(fillColorRed);
             }
 
@@ -238,7 +252,8 @@ public class ParseResultsTest {
                 log.error(scenarioRunResult.toString());
                 throw new UnsupportedOperationException(scenarioRunResult.toString());
             }
-
+            
+            
         }
 
         /**
@@ -253,12 +268,13 @@ public class ParseResultsTest {
         
         //statsCell.setCellValue("this is it!!!");
 
-        fontArial.setBoldweight(Font.BOLDWEIGHT_BOLD);
-        resultCellsStyle.setFont(fontArial);
+        
+        
+        
 
         for (int i = 0; i < topRow.getLastCellNum(); i++ ) {// For each cell in the row
             resultsSheet.autoSizeColumn(i);
-            topRow.getCell(i).setCellStyle(resultCellsStyle);// Set the style
+            topRow.getCell(i).setCellStyle(topRowStyle);// Set the style
         }
 
         resultsSheet.setColumnWidth(1, 20000);
