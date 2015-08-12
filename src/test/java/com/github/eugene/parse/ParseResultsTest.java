@@ -126,13 +126,13 @@ public class ParseResultsTest {
             buildsList.add(buildNum);
         }
 
-        Workbook wb = new XSSFWorkbook();
+        Workbook workbook = new XSSFWorkbook();
 
         /**
          * Initial formatting
          */
-        Sheet resultsSheet = wb.createSheet("Test Results");
-        Sheet runStatsSheet = wb.createSheet("Run Statistics");
+        Sheet resultsSheet = workbook.createSheet("Test Results");
+        Sheet runStatsSheet = workbook.createSheet("Run Statistics");
 
         Row topRow = resultsSheet.createRow(0);
 
@@ -174,10 +174,10 @@ public class ParseResultsTest {
             currentRowNumber++ ;
         }
 
-        CellStyle fillColorGreen = wb.createCellStyle();
-        CellStyle fillColorRed = wb.createCellStyle();
-        CellStyle fillColorYellow = wb.createCellStyle();
-        CellStyle foreGroundFill = wb.createCellStyle();
+        CellStyle fillColorGreen = workbook.createCellStyle();
+        CellStyle fillColorRed = workbook.createCellStyle();
+        CellStyle fillColorYellow = workbook.createCellStyle();
+        CellStyle foreGroundFill = workbook.createCellStyle();
 
         fillColorGreen.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
         fillColorRed.setFillForegroundColor(IndexedColors.ROSE.getIndex());
@@ -227,8 +227,8 @@ public class ParseResultsTest {
         /**
          * Final formatting
          */
-        CellStyle style = wb.createCellStyle();
-        Font font = wb.createFont();
+        CellStyle style = workbook.createCellStyle();
+        Font font = workbook.createFont();
 
         font.setBoldweight(Font.BOLDWEIGHT_BOLD);
         style.setFont(font);
@@ -240,12 +240,12 @@ public class ParseResultsTest {
 
         resultsSheet.setColumnWidth(1, 20000);
 
-        FileOutputStream fileOut = new FileOutputStream("workbook.xlsx");
+        FileOutputStream fileOut = new FileOutputStream("results.xlsx");
 
         log.info("=-=-=-=-=-=-=-=");
         log.info("Writing the results into excel file...");
         log.info("=-=-=-=-=-=-=-=");
-        wb.write(fileOut);
+        workbook.write(fileOut);
         fileOut.close();
         log.info("File saved!");
     }
