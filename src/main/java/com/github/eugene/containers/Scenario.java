@@ -58,7 +58,7 @@ public class Scenario {
 	            beforeHooks.add(new BeforeHook(duration, status, location));
 	            
 	            if ("pending".equalsIgnoreCase(status)) {
-	                runResult = "pending";
+	                runResult = "Pending";
 	            }
 	        }
 	        
@@ -77,10 +77,10 @@ public class Scenario {
 	    
 	    if (!"pending".equalsIgnoreCase(runResult)) {
 	        
-	        runResult = "pass";
+	        runResult = "Pass";
 	        for (Step step : steps) {
 	            if (step.isFailed()) {
-	                runResult = "fail";
+	                runResult = "Fail";
 	                continue;
 	            }
 	        }
