@@ -38,6 +38,7 @@ public class FeatureFileElement {
         featureFileElementUri = uri;
         scenariosJSON = scenarios;
         featureFileElementPath = name + "," + uri;
+        
 
         initiateScenarios();
     }
@@ -53,15 +54,14 @@ public class FeatureFileElement {
             JSONArray scenarioSteps = (JSONArray) ob.get("steps");
             JSONArray scenarioBeforeHooks = (JSONArray) ob.get("before");
             JSONArray scenarioAfterHooks = (JSONArray) ob.get("after");
+            JSONArray tags = (JSONArray) ob.get("tags");
             
             if ("scenario".equals(scenarioType)) {
-                scenarios.add(new Scenario(scenarioName, featureFileElementUri, scenarioType, scenarioSteps, scenarioBeforeHooks, scenarioAfterHooks));
+                scenarios.add(new Scenario(scenarioName, featureFileElementUri, scenarioType, scenarioSteps, scenarioBeforeHooks, scenarioAfterHooks, tags));
             }
             else if ("background".equals(scenarioType)) {
                 backgroundScenarios.add(new BackgroundScenario(scenarioName, scenarioType, scenarioSteps, scenarioBeforeHooks, scenarioAfterHooks));
             }
-
-            
         }
     }
 
