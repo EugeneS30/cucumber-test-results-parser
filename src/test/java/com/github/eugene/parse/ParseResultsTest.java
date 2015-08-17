@@ -16,11 +16,18 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
+//import org.apache.poi.common.usermodel.Hyperlink;
 import org.apache.poi.hssf.record.cf.PatternFormatting;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Comment;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -105,7 +112,7 @@ public class ParseResultsTest {
         for (Entry<Integer, List<FeatureFileElement>> build : buildsResults.entrySet()) {
             for (FeatureFileElement ffe : build.getValue()) {
                 for (Scenario scenario : ffe.getScenarios()) {
-                    allBuildResults.add(new UniqueScenario(build.getKey(), scenario, scenario.getRunResult()));
+                    allBuildResults.add(new UniqueScenario(build.getKey(), scenario, scenario.getRunResult(), scenario.getTags()));
                 }
             }
         }
@@ -218,12 +225,24 @@ public class ParseResultsTest {
         fillColorYellow.setFillPattern(CellStyle.SOLID_FOREGROUND);
         fillColorGreen.setFont(fontArial);
 
+        CellStyle hlink_style = workbook.createCellStyle();
+        CreationHelper createHelper = workbook.getCreationHelper();
+        
+        Font hlink_font = workbook.createFont();
+        hlink_font.setUnderline(Font.U_SINGLE);
+        hlink_font.setColor(IndexedColors.BLUE.getIndex());
+        hlink_style.setFont(hlink_font);
+        
+        Hyperlink link = createHelper.createHyperlink(Hyperlink.LINK_URL);
+        
+                
         for (UniqueScenario entry : allBuildResults) {
 
             int buildNum = entry.getBuildNum();
             Scenario scenario = entry.getScenario();
             String scenarioRunResult = entry.getRunResult();
             String scenarioName = scenario.getScenarioName();
+            List<String> tags = entry.getTags();
 
             log.debug("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
             log.debug("Processing UniqueScenario: #" + scenarioName + "#");
@@ -236,12 +255,32 @@ public class ParseResultsTest {
             Cell currentCell = currentRow.createCell(currentColNum);
             currentCell.setCellValue(scenarioRunResult);
 
+            // TAGS
+            CreationHelper factory = workbook.getCreationHelper();
+            Drawing drawing = resultsSheet.createDrawingPatriarch();
+            ClientAnchor anchor = factory.createClientAnchor();
+            RichTextString str = factory.createRichTextString(tags.toString());
+            
             if ("pass".equalsIgnoreCase(scenarioRunResult)) {
                 currentCell.setCellStyle(fillColorGreen);
             }
 
+                        
             else if ("fail".equalsIgnoreCase(scenarioRunResult)) {
-                currentCell.setCellStyle(fillColorRed);
+                currentCell.setCellStyle(fillColorRed); // Set style
+                
+                // Check if known issue
+                if (tags.contains("KnownIssue")) {
+                    Comment comment = drawing.createCellComment(anchor);
+                    comment.setString(str);
+                    currentCell.setCellComment(comment); // Assign the comment to the cell
+                }
+                
+                link = createHelper.createHyperlink(Hyperlink.LINK_FILE);
+                link.setAddress("http://poi.apache.org/");
+                
+                currentCell.setHyperlink(link);
+                //currentCell.setCellStyle(hlink_style);
             }
 
             else if ("pending".equalsIgnoreCase(scenarioRunResult)) {
@@ -257,19 +296,21 @@ public class ParseResultsTest {
         }
 
         /**
-         * Post
+         * Post processing
          */
         
         int lastRowNum = resultsSheet.getLastRowNum();
-        int statsRowNum = lastRowNum++;
+        int statsRowNum = lastRowNum + 2;
         Row statsRow = resultsSheet.createRow(lastRowNum);
         
-        Cell statsCell = statsRow.createCell(1);
-        
-        //statsCell.setCellValue("this is it!!!");
 
+        for (int i = 2; i < topRow.getLastCellNum(); i++ ) {// For each cell in the row
+            Cell cell = statsRow.createCell(i);
+            cell.setCellFormula("COUNTIF(C2:C341, \"Pass\")");
+        }
         
         
+        Cell statsCell = statsRow.createCell(1);
         
 
         for (int i = 0; i < topRow.getLastCellNum(); i++ ) {// For each cell in the row
