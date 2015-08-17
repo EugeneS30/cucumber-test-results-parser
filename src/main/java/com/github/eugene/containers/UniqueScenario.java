@@ -1,15 +1,20 @@
 package com.github.eugene.containers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class UniqueScenario { 
     private int buildNum;
     private Scenario scenario;
     private String runResult;
+    private List<Tag> tags;
     
-    public UniqueScenario(int buildNum, Scenario scenario, String runResult) {
+    public UniqueScenario(int buildNum, Scenario scenario, String runResult, List<Tag> tags) {
         this.buildNum = buildNum;
         this.scenario = scenario;
         this.runResult = runResult;
+        this.tags = tags;
     }
     
     public String generateUriScenarioPair() {
@@ -34,6 +39,16 @@ public class UniqueScenario {
     
     public String getRunResult() {
         return runResult;
+    }
+    
+    public List<String> getTags() {
+        List<String> tags = new ArrayList<String>();
+        
+        for (Tag tag : this.tags) {
+            tags.add(tag.toString());
+        }
+        
+        return tags;
     }
     
 }
