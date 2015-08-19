@@ -41,8 +41,14 @@ public class BackgroundScenario {
 	        for (JSONObject ob : stepsJSON) {
 	            String name = (String) ob.get("name");
 	            JSONObject result = (JSONObject) ob.get("result");
+	            String output = "empty";
+	            try {
+	                output = (String) ob.get("output");
+	            } catch (Throwable e) {
+	                
+	            }
 	                        
-	            steps.add(new Step(name, result));
+	            steps.add(new Step(name, result, output));
 	        }
 	        
 	        log.debug("Adding beforeHooks");
