@@ -19,6 +19,7 @@ public class Scenario {
     private List<Step> steps = new ArrayList<Step>();
     private List<Tag> tags = new ArrayList<Tag>();
     private String runResult;
+    private String outputPath;
 
     // CONSTRUCTOR
     public Scenario(String scenarioName, 
@@ -49,8 +50,15 @@ public class Scenario {
         for (JSONObject ob : stepsJSON) {
             String name = (String) ob.get("name");
             JSONObject result = (JSONObject) ob.get("result");
-
-            steps.add(new Step(name, result));
+                      
+            try {
+                outputPath = ob.get("output").toString();
+                
+            } catch (Throwable e) {
+                
+            }
+            
+            steps.add(new Step(name, result, outputPath));
         }
 
         log.debug("Adding beforeHooks");
@@ -148,6 +156,16 @@ public class Scenario {
 
         }
         return false;
+    }
+    
+    private Step getLastStep() {
+        return steps.get(steps.size() - 1);
+    }
+    
+    public String getScreenShotPath() {
+        Step step = getLastStep();
+        
+        return step.getOutput();
     }
 
     public String generateUriScenarioPair() {
