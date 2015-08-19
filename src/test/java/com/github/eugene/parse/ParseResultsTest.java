@@ -14,6 +14,8 @@ import java.util.Map.Entry;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 //import org.apache.poi.common.usermodel.Hyperlink;
@@ -233,9 +235,6 @@ public class ParseResultsTest {
         hlink_font.setColor(IndexedColors.BLUE.getIndex());
         hlink_style.setFont(hlink_font);
         
-        Hyperlink link = createHelper.createHyperlink(Hyperlink.LINK_URL);
-        
-                
         for (UniqueScenario entry : allBuildResults) {
 
             int buildNum = entry.getBuildNum();
@@ -267,6 +266,22 @@ public class ParseResultsTest {
 
                         
             else if ("fail".equalsIgnoreCase(scenarioRunResult)) {
+                String screenShotName = "";
+                
+                Pattern pattern = Pattern.compile("screenshot-\\d*");
+                try {
+                    Matcher matcher = pattern.matcher(scenario.getScreenShotPath());
+                    
+                    if (matcher.find()) {
+                        screenShotName = matcher.group(0);
+                    }
+                }
+                catch (NullPointerException e ) {
+                    log.error("couldn't get screenshotpath");
+                }
+                
+                String URL = "http://10.25.67.130:8080/job/Connect%20Automated%20Functional%20Tests%20-%20Firefox%2032/" + buildNum + "/Functional_Test_Report/screenshots/" + screenShotName + ".png";
+
                 currentCell.setCellStyle(fillColorRed); // Set style
                 
                 // Check if known issue
@@ -276,8 +291,8 @@ public class ParseResultsTest {
                     currentCell.setCellComment(comment); // Assign the comment to the cell
                 }
                 
-                link = createHelper.createHyperlink(Hyperlink.LINK_FILE);
-                link.setAddress("http://poi.apache.org/");
+                Hyperlink link = createHelper.createHyperlink(Hyperlink.LINK_FILE);
+                link.setAddress(URL);
                 
                 currentCell.setHyperlink(link);
                 //currentCell.setCellStyle(hlink_style);
