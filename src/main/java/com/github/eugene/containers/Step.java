@@ -9,8 +9,9 @@ public class Step {
 	private String name;
 	private String result;
 	private long duration;
+	private String output;
 
-	public Step(String name, JSONObject result) {
+	public Step(String name, JSONObject result, String output) {
 	    log.debug("Step constructor start...");
 	    
 		this.name = name;
@@ -26,6 +27,7 @@ public class Step {
 		else {
 		    this.duration = (Long) result.get("duration");
 		}
+		this.output = output;
 
 	}
 
@@ -39,6 +41,14 @@ public class Step {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public String getOutput() {
+	    if (!"empty".equals(output)) {
+	        return output;
+	    }
+	    
+	    return "empty";
 	}
 
 }
