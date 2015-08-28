@@ -66,7 +66,7 @@ public class ParseResultsTest {
             try {
                 buildNumber = Integer.parseInt(buildPath.getName().toString());
             } catch (NumberFormatException e) {
-                log.error("Invalid folder name: " + buildPath.getName().toString());
+                log.warn("Not a valid folder name. Skipping...: " + buildPath.getName().toString());
                 continue;
             }
 
@@ -277,7 +277,7 @@ public class ParseResultsTest {
                     }
                 }
                 catch (NullPointerException e ) {
-                    log.error("couldn't get screenshotpath");
+                    log.error("Couldn't get screenshotpath for scenario: \"" + entry.getScenarioName() + "\" in build " +  entry.getBuildNum());
                 }
                 
                 String URL = "http://10.25.67.130:8080/job/Connect%20Automated%20Functional%20Tests%20-%20Firefox%2032/" + buildNum + "/Functional_Test_Report/screenshots/" + screenShotName + ".png";
