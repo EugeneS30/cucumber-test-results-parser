@@ -39,6 +39,14 @@ public class Step {
 		return false;
 	}
 	
+	public boolean isSkipped() {
+        if ("skipped".equals(result)) {
+            return true;
+        }
+
+        return false;
+    }
+	
 	public String getName() {
 		return name;
 	}
