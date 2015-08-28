@@ -140,7 +140,7 @@ public class Scenario {
 
             runResult = "Pass";
             for (Step step : steps) {
-                if (step.isFailed()) {
+                if (step.isFailed() || step.isSkipped()) {
                     runResult = "Fail";
                     continue;
                 }
