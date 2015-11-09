@@ -335,9 +335,18 @@ public class ParseResultsTest {
          */
 
         int lastRowNum = resultsSheet.getLastRowNum();
-        Row passStatsRow = resultsSheet.createRow(lastRowNum);
-        Row failStatsRow = resultsSheet.createRow(lastRowNum + 1);
-
+        Row passStatsRow = resultsSheet.createRow(lastRowNum + 2);
+        Row failStatsRow = resultsSheet.createRow(lastRowNum + 3);
+        
+        Cell passCountCell = passStatsRow.createCell(1);
+        Cell failCountCell = failStatsRow.createCell(1);
+        
+        passCountCell.setCellValue("Passed:");
+        failCountCell.setCellValue("Failed:");
+        
+        passCountCell.setCellStyle(topRowStyle);
+        failCountCell.setCellStyle(topRowStyle);
+        
         // Count and print the number of passed scenarios
         for (int i = 2; i < topRow.getLastCellNum(); i++ ) { // For each cell in the row
             Cell cell = passStatsRow.createCell(i);
@@ -372,6 +381,7 @@ public class ParseResultsTest {
         log.info("=-=-=-=-=-=-=-=");
         workbook.write(fileOut);
         fileOut.close();
+        workbook.close();
         log.info("File saved!");
     }
 }
