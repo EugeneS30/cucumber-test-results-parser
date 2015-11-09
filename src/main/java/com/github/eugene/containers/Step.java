@@ -18,11 +18,11 @@ public class Step {
 		this.result = (String) result.get("status");
 		if ("skipped".equals(this.result)) {
 		    log.debug("SKIPPED test. Setting duration to -1");
-		    this.duration = -1;
+		    this.duration = 0;
 		}
 		else if ("undefined".equals(this.result)) {
 		    log.debug("UNDEFINED test.  Setting duration to -2");
-		    this.duration = -2;
+		    this.duration = 0;
 		}
 		else {
 		    this.duration = (Long) result.get("duration");
