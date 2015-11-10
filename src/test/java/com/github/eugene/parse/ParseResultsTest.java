@@ -1,24 +1,18 @@
 package com.github.eugene.parse;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-// import org.apache.poi.common.usermodel.Hyperlink;
 import org.apache.poi.hssf.record.cf.PatternFormatting;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -34,23 +28,17 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.junit.Test;
 
 import com.github.eugene.config.ConfigurationClass;
 import com.github.eugene.containers.FeatureFileElement;
 import com.github.eugene.containers.Scenario;
 import com.github.eugene.containers.UniqueScenario;
+import com.github.eugene.processing.DataParse;
 
 public class ParseResultsTest {
 
     final static Logger log = Logger.getLogger(ParseResultsTest.class);
-
-    private final String buildsDirPath = ConfigurationClass.buildsDirPath;
-    private final String jsonRelativePath = ConfigurationClass.jsonRelativePath;
 
     private static int getExcelColumnNumber(String column) {
         int result = 0;
@@ -76,83 +64,18 @@ public class ParseResultsTest {
     @Test
     public void testFunction() throws IOException {
 
-        File dir = new File(buildsDirPath);
-        File[] buildsDir = dir.listFiles();
-
-        Map<Integer, List<FeatureFileElement>> buildsResults = new TreeMap<Integer, List<FeatureFileElement>>(Collections.reverseOrder());
-
-        for (File buildPath : buildsDir) {
-
-            int buildNumber = -1; // setting dummy value
-
-            try {
-                buildNumber = Integer.parseInt(buildPath.getName().toString());
-            } catch (NumberFormatException e) {
-                log.warn("Not a valid folder name. Skipping...: " + buildPath.getName().toString());
-                continue;
-            }
-
-            log.info("Parsing buildResults: " + buildPath);
-
-            try {
-                FileReader reader = new FileReader(String.join("\\", buildPath.toString(), jsonRelativePath));
-
-                JSONParser jsonParser = new JSONParser();
-
-                JSONArray jsonFileData = (JSONArray) jsonParser.parse(reader);
-                List<JSONObject> allJSONFileElementsList = new ArrayList<JSONObject>();
-                allJSONFileElementsList.addAll(jsonFileData);
-
-                List<FeatureFileElement> featureFileObjectsList = new ArrayList<FeatureFileElement>();
-
-                int iter = 0;
-                for (JSONObject featureFileElement : allJSONFileElementsList) {
-                    log.debug("Processing new featureFileElement: " + iter);
-                    iter++ ;
-                    String name = (String) featureFileElement.get("name");
-                    String uri = (String) featureFileElement.get("uri");
-                    JSONArray elements = (JSONArray) featureFileElement.get("elements");
-
-                    featureFileObjectsList.add(new FeatureFileElement(name, uri, elements));
-
-                }
-
-                buildsResults.put(buildNumber, featureFileObjectsList);
-
-            }
-
-            catch (FileNotFoundException e) {
-                log.error("File not found: " + buildPath.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
+        // Parsing the data from all builds (buildNumber, FeatureFileElement)
+        Map<Integer, List<FeatureFileElement>> buildsData = DataParse.createBuildsResults();
 
         // A list of UniqueScenario objects (buildNum, scenario, isFailed)
-        List<UniqueScenario> allBuildResults = new ArrayList<UniqueScenario>();
-
-        for (Entry<Integer, List<FeatureFileElement>> build : buildsResults.entrySet()) {
-            for (FeatureFileElement ffe : build.getValue()) {
-                for (Scenario scenario : ffe.getScenarios()) {
-                    allBuildResults.add(new UniqueScenario(build.getKey(), scenario, scenario.getRunResult(), scenario.getTags()));
-                }
-            }
-        }
+        List<UniqueScenario> uniqueScenariosList = DataParse.getAllBuildResults(buildsData);
 
         // Generates a list of unique scenario names from all the builds.
-        SortedSet<String> uniqueScenarioNamesSet = new TreeSet<String>();
-
-        for (UniqueScenario scenario : allBuildResults) {
-            uniqueScenarioNamesSet.add(scenario.generateUriScenarioPair());
-        }
-
-        // A list of all build numbers
-        List<Integer> buildsList = new ArrayList<Integer>();
-        for (Integer buildNum : buildsResults.keySet()) {
-            buildsList.add(buildNum);
-        }
+        SortedSet<String> uniqueScenarioNamesSet = DataParse.generateUniquyeScenriosNames(uniqueScenariosList);
+        
+        // A list of all builds numbers
+        List<Integer> allBuildsNumbersList = DataParse.getAllBuildsNumbers(buildsData);
+          
 
         /**
          * EXCEL OUTPUT
@@ -203,7 +126,7 @@ public class ParseResultsTest {
         // Set all the column names as build numbers
         Map<Integer, Integer> buildToColumnMapper = new HashMap<Integer, Integer>();
 
-        for (Integer buildNum : buildsList) {
+        for (Integer buildNum : allBuildsNumbersList) {
 
             buildToColumnMapper.put(buildNum, startCol);
 
@@ -256,7 +179,7 @@ public class ParseResultsTest {
         hlink_font.setColor(IndexedColors.BLUE.getIndex());
         hlink_style.setFont(hlink_font);
 
-        for (UniqueScenario entry : allBuildResults) {
+        for (UniqueScenario entry : uniqueScenariosList) {
 
             int buildNum = entry.getBuildNum();
             Scenario scenario = entry.getScenario();
@@ -352,7 +275,7 @@ public class ParseResultsTest {
             Cell cell = passStatsRow.createCell(i);
             String colName = getExcelColumnName(i + 1); // "Translate" the column number to column
                                                         // name. Example: C = 2
-            String formula = "COUNTIF(" + colName + "2:" + colName + "341, \"Pass\")";
+            String formula = "COUNTIF(" + colName + "2:" + colName + (lastRowNum + 1) + ", \"Pass\")";
             cell.setCellFormula(formula);
         }
 
@@ -361,7 +284,7 @@ public class ParseResultsTest {
             Cell cell = failStatsRow.createCell(i);
             String colName = getExcelColumnName(i + 1); // "Translate" the column number to column
                                                         // name. Example: C = 2
-            String formula = "COUNTIF(" + colName + "2:" + colName + "341, \"Fail\")";
+            String formula = "COUNTIF(" + colName + "2:" + colName + (lastRowNum + 1) + ", \"Fail\")";
             cell.setCellFormula(formula);
         }
 
