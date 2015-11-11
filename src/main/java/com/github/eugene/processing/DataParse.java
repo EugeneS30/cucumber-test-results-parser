@@ -30,7 +30,7 @@ public class DataParse {
     private final static String buildsDirPath = ConfigurationClass.buildsDirPath;
     private final static String jsonRelativePath = ConfigurationClass.jsonRelativePath;
 
-    public static Map<Integer, List<FeatureFileElement>> createBuildsResults() {
+    public static Map<Integer, List<FeatureFileElement>> extractBuildsData() {
 
         File dir = new File(buildsDirPath);
         File[] buildsDir = dir.listFiles();
@@ -89,13 +89,13 @@ public class DataParse {
 
     }
 
-    public static List<UniqueScenario> getAllBuildResults(Map<Integer, List<FeatureFileElement>> buildsResults) {
+    public static List<UniqueScenario> extractUniqueScenarios(Map<Integer, List<FeatureFileElement>> buildsResults) {
 
         final List<UniqueScenario> allBuildResults = new ArrayList<UniqueScenario>();
 
         for (Entry<Integer, List<FeatureFileElement>> build : buildsResults.entrySet()) {
-            for (FeatureFileElement ffe : build.getValue()) {
-                for (Scenario scenario : ffe.getScenarios()) {
+            for (FeatureFileElement featureFileElement : build.getValue()) {
+                for (Scenario scenario : featureFileElement.getScenarios()) {
                     allBuildResults.add(new UniqueScenario(build.getKey(), scenario, scenario.getRunResult(), scenario.getTags()));
                 }
             }
@@ -103,7 +103,9 @@ public class DataParse {
         return allBuildResults;
     }
 
-    public static SortedSet<String> generateUniquyeScenriosNames(List<UniqueScenario> uniqueScenariosList) {
+    public static SortedSet<String> createUniqueScenriosNames(List<UniqueScenario> uniqueScenariosList) {
+        
+        log.debug("Extracting unique scenarios names");
 
         SortedSet<String> uniqueScenarioNamesSet = new TreeSet<String>();
 
@@ -116,6 +118,8 @@ public class DataParse {
     }
 
     public static List<Integer> getAllBuildsNumbers(Map<Integer, List<FeatureFileElement>> buildsData) {
+        
+        log.debug("Getting builds numbers list");
 
         List<Integer> buildsList = new ArrayList<Integer>();
         for (Integer buildNum : buildsData.keySet()) {
