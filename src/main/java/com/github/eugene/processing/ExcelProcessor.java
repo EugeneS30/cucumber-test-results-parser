@@ -63,7 +63,7 @@ public class ExcelProcessor {
     static String fileName = "results.xlsx";
     static FileOutputStream fileOut;
 
-    static String URL;
+    static String URL = "http://10.25.67.130:8080/job/Connect%20Automated%20Functional%20Tests%20-%20Firefox%2032/";
 
     public static void prepareProcessor(List<Integer> allBuildsNumbersList, SortedSet<String> uniqueScenarioNamesSet) {
 
@@ -177,7 +177,6 @@ public class ExcelProcessor {
 
             scenarioNameToRowMapper.put(uniqueScenario, currentRowNumber);
 
-            // TODO use constants here instead of 0 and 1
             currentFilenameCell.setCellValue(uniqueScenario.split(",")[0]); // set feature file path
             currentFilenameCell.setCellStyle(resultCellsStyle);
             currentScenarioCell.setCellValue(uniqueScenario.split(",")[1]); // set the scenario name
@@ -320,7 +319,6 @@ public class ExcelProcessor {
         try {
             fileOut = new FileOutputStream(fileName);
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
