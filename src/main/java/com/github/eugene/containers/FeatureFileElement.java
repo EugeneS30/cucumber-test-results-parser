@@ -48,6 +48,9 @@ public class FeatureFileElement {
     }
     
     private void initiateScenarios() {
+        if (scenariosJSON == null) {
+            return;
+        }
         for (JSONObject ob : scenariosJSON) {
             String scenarioName = (String) ob.get("name");
             String scenarioType = (String) ob.get("type");
