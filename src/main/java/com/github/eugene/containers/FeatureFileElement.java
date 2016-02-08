@@ -14,15 +14,14 @@ import org.json.simple.JSONObject;
  * <p>
  * Contains all data from the results of a single feature file
  * 
- * @author eugene.shragovich 
+ * @author eugene.shragovich
  *
  */
 
 public class FeatureFileElement {
 
     final static Logger log = Logger.getLogger(FeatureFileElement.class);
-    
-    
+
     private String featureFileElementName;
     private String featureFileElementUri;
     private List<JSONObject> scenariosJSON = new ArrayList<JSONObject>();
@@ -38,17 +37,17 @@ public class FeatureFileElement {
         featureFileElementUri = uri;
         scenariosJSON = scenarios;
         featureFileElementPath = name + "," + uri;
-        
 
         initiateScenarios();
     }
-    
+
     public List<Scenario> getScenarios() {
         return scenarios;
     }
-    
+
     private void initiateScenarios() {
         if (scenariosJSON == null) {
+            log.warn("This FeatureFileElement does not contain any scenarios! Skipping...");
             return;
         }
         for (JSONObject ob : scenariosJSON) {
@@ -58,12 +57,21 @@ public class FeatureFileElement {
             JSONArray scenarioBeforeHooks = (JSONArray) ob.get("before");
             JSONArray scenarioAfterHooks = (JSONArray) ob.get("after");
             JSONArray tags = (JSONArray) ob.get("tags");
-            
+
             if ("scenario".equals(scenarioType)) {
-                scenarios.add(new Scenario(scenarioName, featureFileElementUri, scenarioType, scenarioSteps, scenarioBeforeHooks, scenarioAfterHooks, tags));
-            }
-            else if ("background".equals(scenarioType)) {
-                backgroundScenarios.add(new BackgroundScenario(scenarioName, scenarioType, scenarioSteps, scenarioBeforeHooks, scenarioAfterHooks));
+                try {
+                    scenarios.add(new Scenario(scenarioName, featureFileElementUri, scenarioType, scenarioSteps, scenarioBeforeHooks,
+                            scenarioAfterHooks, tags));
+                }
+
+                catch (NullPointerException e) {
+                    e.getMessage();
+
+                }
+
+            } else if ("background".equals(scenarioType)) {
+                backgroundScenarios.add(new BackgroundScenario(scenarioName, scenarioType, scenarioSteps, scenarioBeforeHooks,
+                        scenarioAfterHooks));
             }
         }
     }
@@ -107,6 +115,5 @@ public class FeatureFileElement {
 
         return scenarioResultPairs;
     }
-    
-    
+
 }
