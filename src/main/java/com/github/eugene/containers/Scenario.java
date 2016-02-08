@@ -33,6 +33,10 @@ public class Scenario {
 
         log.debug("Scenario constructor start: " + scenarioName);
         log.debug("Scenario type: " + scenarioType);
+        
+        if (scenarioSteps == null) {
+            throw new NullPointerException("This scenario doesn't seem to contain any steps! Skipping...");
+        }
 
         this.scenarioName = scenarioName;
         this.scenarioType = scenarioType;
