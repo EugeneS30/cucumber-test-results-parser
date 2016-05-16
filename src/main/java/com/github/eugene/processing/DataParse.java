@@ -1,5 +1,6 @@
 package com.github.eugene.processing;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -8,10 +9,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,8 +31,19 @@ public class DataParse {
     private final static String buildsDirPath = ConfigurationClass.buildsDirPath;
     private final static String jsonRelativePath = ConfigurationClass.jsonRelativePath;
 
-    public static Map<Integer, List<FeatureFileElement>> extractBuildsData() {
+    public static Map<Integer, List<FeatureFileElement>> extractBuildsData() throws FileNotFoundException, IOException {
+        
+        List<Integer> ignoredBuildsList = new ArrayList<Integer>();
+        File ignoredBuildsFile = new File(System.getProperty("user.dir") + ConfigurationClass.ignoreFileRelativePath);
 
+        log.info("Attempting to read the ignored builds file");
+        try (BufferedReader br = new BufferedReader(new FileReader(ignoredBuildsFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                ignoredBuildsList.add(Integer.parseInt(line));
+            }
+        }
+        
         File dir = new File(buildsDirPath);
         File[] buildsDir = dir.listFiles();
 
@@ -52,6 +64,12 @@ public class DataParse {
             }
 
             log.info("Parsing buildData: " + buildPath);
+            
+            log.debug("Checking if build should be ignored...");
+            if (ignoredBuildsList.contains(buildNumber)) {
+                log.info("This build is set to be IGNORED. Continuing to the next build...");
+                continue;
+            }
 
             try {
                 FileReader reader = new FileReader(String.join("\\", buildPath.toString(), jsonRelativePath));
