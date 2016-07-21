@@ -189,10 +189,7 @@ public class ExcelProcessor {
 
     public static void processData(List<UniqueScenario> uniqueScenariosList) throws IOException {
 
-        int i = 0;
         for (UniqueScenario entry : uniqueScenariosList) {
-            
-            System.out.println(i++);
 
             int buildNum = entry.getBuildNum();
             Scenario scenario = entry.getScenario();

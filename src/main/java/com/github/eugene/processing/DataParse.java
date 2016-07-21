@@ -191,29 +191,24 @@ public class DataParse {
         // We will need to have a full list of scenarios in the last build to know which ones are
         // relevant at the moment.
         List<Scenario> lastBuildScenariosList = getLastBuildScenarios(uniqueScenariosList);
-        List<UniqueScenario> uniqueScenarioNamesSetClean = new ArrayList<UniqueScenario>(); 
-        
+        List<UniqueScenario> uniqueScenarioNamesSetClean = new ArrayList<UniqueScenario>();
+
         log.debug("Looking for legacy scenarios");
-        
-         
 
         // Iterate over all unique scenarios
         for (UniqueScenario uniqueScenario : uniqueScenariosList) {
-            //for each unique scenario check if it is in the last build
+            // for each unique scenario check if it is in the last build
             for (Scenario scenario : lastBuildScenariosList) {
-                if (uniqueScenario.getScenarioName().equals(scenario.getScenarioName())) {
-                    log.info("FOUND THIS ONE: {}", uniqueScenario.getScenarioName());
+                if (uniqueScenario.getScenarioName().equals(scenario.getScenarioName())
+                        && uniqueScenario.getUri().equals(scenario.getUri())) {
                     uniqueScenarioNamesSetClean.add(uniqueScenario);
                     break;
                 }
             }
-            
-            
+
         }
 
-        
-
-//        return uniqueScenariosList;
+        // return uniqueScenariosList;
         return uniqueScenarioNamesSetClean;
 
     }
