@@ -29,6 +29,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.github.eugene.containers.Scenario;
+import com.github.eugene.containers.Tag;
 import com.github.eugene.containers.UniqueScenario;
 
 @Slf4j
@@ -188,13 +189,16 @@ public class ExcelProcessor {
 
     public static void processData(List<UniqueScenario> uniqueScenariosList) throws IOException {
 
+        int i = 0;
         for (UniqueScenario entry : uniqueScenariosList) {
+            
+            System.out.println(i++);
 
             int buildNum = entry.getBuildNum();
             Scenario scenario = entry.getScenario();
             String scenarioRunResult = entry.getRunResult();
             String scenarioName = scenario.getScenarioName();
-            List<String> tags = entry.getTags();
+            List<Tag> tags = entry.getTags();
 
             log.debug("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
             log.debug("Processing UniqueScenario: #" + scenarioName + "#");
@@ -256,6 +260,7 @@ public class ExcelProcessor {
             }
 
             else {
+                System.out.println("asfsdfsdfsdfsdfs");
                 log.error(scenarioRunResult.toString());
                 throw new UnsupportedOperationException(scenarioRunResult.toString());
             }

@@ -7,6 +7,7 @@ import java.util.SortedSet;
 
 import org.junit.Test;
 
+import com.github.eugene.config.ConfigurationClass;
 import com.github.eugene.containers.FeatureFileElement;
 import com.github.eugene.containers.UniqueScenario;
 import com.github.eugene.processing.DataParse;
@@ -22,15 +23,30 @@ public class ParseResultsTest {
 
         // A list of UniqueScenario objects (buildNum, scenario, isFailed)
         List<UniqueScenario> uniqueScenariosList = DataParse.extractUniqueScenarios(buildsData);
+        List<UniqueScenario> uniqueScenariosListCleaned = DataParse.removeLegacyScenarios(uniqueScenariosList);
 
-        // Generates a list of unique scenario names from all the builds.
-        SortedSet<String> uniqueScenarioNamesSet = DataParse.createUniqueScenriosNames(uniqueScenariosList);
+        if (ConfigurationClass.removeLegacyScenarios) {
 
-        // A list of all builds numbers
-        List<Integer> allBuildsNumbersList = DataParse.getAllBuildsNumbers(buildsData);
+            // Generates a list of unique scenario names from all the builds.
+            SortedSet<String> uniqueScenarioNamesSet = DataParse.createUniqueScenriosNames(uniqueScenariosListCleaned);
 
-        ExcelProcessor.prepareProcessor(allBuildsNumbersList, uniqueScenarioNamesSet);
-        ExcelProcessor.processData(uniqueScenariosList);
+            // A list of all builds numbers
+            List<Integer> allBuildsNumbersList = DataParse.getAllBuildsNumbers(buildsData);
+
+            ExcelProcessor.prepareProcessor(allBuildsNumbersList, uniqueScenarioNamesSet);
+            ExcelProcessor.processData(uniqueScenariosListCleaned);
+
+        } else {
+
+            SortedSet<String> uniqueScenarioNamesSet = DataParse.createUniqueScenriosNames(uniqueScenariosList);
+
+            // A list of all builds numbers
+            List<Integer> allBuildsNumbersList = DataParse.getAllBuildsNumbers(buildsData);
+
+            ExcelProcessor.prepareProcessor(allBuildsNumbersList, uniqueScenarioNamesSet);
+            ExcelProcessor.processData(uniqueScenariosList);
+        }
+
         ExcelProcessor.finaliseProcessor();
 
     }

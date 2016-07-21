@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-public class Scenario {
+public class ScenarioImpl implements Scenario {
     final static Logger log = Logger.getLogger(Scenario.class);
 
     private String scenarioName;
@@ -22,7 +22,7 @@ public class Scenario {
     private String outputPath;
 
     // CONSTRUCTOR
-    public Scenario(String scenarioName, 
+    public ScenarioImpl(String scenarioName, 
                     String uri, 
                     String scenarioType, 
                     JSONArray scenarioSteps, 
@@ -166,32 +166,39 @@ public class Scenario {
         return steps.get(steps.size() - 1);
     }
     
+    @Override
     public String getScreenShotPath() {
         Step step = getLastStep();
         
         return step.getOutput();
     }
 
+    @Override
     public String generateUriScenarioPair() {
         return uri + "," + scenarioName;
     }
 
+    @Override
     public String getScenarioType() {
         return scenarioType;
     }
 
+    @Override
     public String getScenarioName() {
         return scenarioName;
     }
 
+    @Override
     public String getUri() {
         return uri;
     }
 
+    @Override
     public String getRunResult() {
         return runResult;
     }
     
+    @Override
     public List<Tag> getTags() {
         return tags;
     }

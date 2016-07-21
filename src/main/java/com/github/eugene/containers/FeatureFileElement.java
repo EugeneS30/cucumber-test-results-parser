@@ -60,7 +60,7 @@ public class FeatureFileElement {
 
             if ("scenario".equals(scenarioType)) {
                 try {
-                    scenarios.add(new Scenario(scenarioName, featureFileElementUri, scenarioType, scenarioSteps, scenarioBeforeHooks,
+                    scenarios.add(new ScenarioImpl(scenarioName, featureFileElementUri, scenarioType, scenarioSteps, scenarioBeforeHooks,
                             scenarioAfterHooks, tags));
                 }
 
