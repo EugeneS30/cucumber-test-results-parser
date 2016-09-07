@@ -137,6 +137,7 @@ public class DataParse {
             for (FeatureFileElement featureFileElement : currentBuild.getValue()) {
                 for (Scenario scenario : featureFileElement.getScenarios()) {
                     if (scenario.getTags().toString().contains("Manual")) {
+                        log.debug("skipping scenario tagged as @Manual");
                         continue;
                     }
                     allBuildResults.add(new UniqueScenario(currentBuild.getKey(), scenario, scenario.getRunResult(), scenario.getTags()));
