@@ -127,19 +127,23 @@ public class DataParse {
 
     }
 
-    public static List<UniqueScenario> extractUniqueScenarios(Map<Integer, List<FeatureFileElement>> buildsResults) {
+    public static List<UniqueScenario> extractUniqueScenarios(Map<Integer, List<FeatureFileElement>> allBuildsResults) {
 
-        setLastBuild(getLastBuildNumber(buildsResults));
+        setLastBuild(getLastBuildNumber(allBuildsResults));
 
         final List<UniqueScenario> allBuildResults = new ArrayList<UniqueScenario>();
 
-        for (Entry<Integer, List<FeatureFileElement>> build : buildsResults.entrySet()) {
-            for (FeatureFileElement featureFileElement : build.getValue()) {
+        for (Entry<Integer, List<FeatureFileElement>> currentBuild : allBuildsResults.entrySet()) {
+            for (FeatureFileElement featureFileElement : currentBuild.getValue()) {
                 for (Scenario scenario : featureFileElement.getScenarios()) {
-                    allBuildResults.add(new UniqueScenario(build.getKey(), scenario, scenario.getRunResult(), scenario.getTags()));
+                    if (scenario.getTags().toString().contains("Manual")) {
+                        continue;
+                    }
+                    allBuildResults.add(new UniqueScenario(currentBuild.getKey(), scenario, scenario.getRunResult(), scenario.getTags()));
                 }
             }
         }
+
         return allBuildResults;
     }
 
