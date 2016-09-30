@@ -32,15 +32,23 @@ public class Step {
 	}
 
 	public boolean isFailed() {
-		if ("failed".equals(result)) {
+		if ("failed".equalsIgnoreCase(result)) {
 			return true;
 		}
 
 		return false;
 	}
 	
+	public boolean isUndefined() {
+        if ("undefined".equalsIgnoreCase(result)) {
+            return true;
+        }
+
+        return false;
+    }
+	
 	public boolean isSkipped() {
-        if ("skipped".equals(result)) {
+        if ("skipped".equalsIgnoreCase(result)) {
             return true;
         }
 
