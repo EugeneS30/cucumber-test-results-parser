@@ -144,7 +144,7 @@ public class ScenarioImpl implements Scenario {
 
             runResult = "Pass";
             for (Step step : steps) {
-                if (step.isFailed() || step.isSkipped()) {
+                if (step.isFailed() || step.isSkipped() || step.isUndefined()) {
                     runResult = "Fail";
                     continue;
                 }
