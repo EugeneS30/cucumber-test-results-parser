@@ -9,4 +9,5 @@ public class ConfigurationClass {
     public static boolean removeLegacyScenarios = false;
 
     
+    
 }
