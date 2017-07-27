@@ -4,7 +4,7 @@ import java.util.List;
 
 
 public interface Scenario {
-    
+   
     String generateUriScenarioPair();
     
     String getRunResult();

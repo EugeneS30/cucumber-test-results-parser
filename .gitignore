@@ -1,4 +1,6 @@
-/target/*
-/workbook.xlsx
-/results.xlsx
+target/*
+.classpath
+.project
+.settings/
+results.xlsx
 /target/
