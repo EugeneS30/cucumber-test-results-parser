@@ -5,3 +5,4 @@ target/*
 /workbook.xlsx
 /results.xlsx
 /results_REMOVED.xlsx
+/target/
