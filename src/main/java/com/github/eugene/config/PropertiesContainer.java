@@ -5,7 +5,7 @@ import java.util.Properties;
 
 public class PropertiesContainer {
 
-	public static final Properties properties = new Properties();
+	private static final Properties properties = new Properties();
 
 	static {
 		try {
