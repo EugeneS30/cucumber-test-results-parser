@@ -9,198 +9,178 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class ScenarioImpl implements Scenario {
-    final static Logger log = Logger.getLogger(Scenario.class);
+	final static Logger log = Logger.getLogger(Scenario.class);
 
-    private String scenarioName;
-    private String uri;
-    private String scenarioType;
-    private List<BeforeHook> beforeHooks = new ArrayList<BeforeHook>();
-    private List<AfterHook> afterHooks = new ArrayList<AfterHook>();
-    private List<Step> steps = new ArrayList<Step>();
-    private List<Tag> tags = new ArrayList<Tag>();
-    private String runResult;
-    private String outputPath;
+	private String scenarioName;
+	private String uri;
+	private String scenarioType;
+	private List<BeforeHook> beforeHooks = new ArrayList<BeforeHook>();
+	private List<AfterHook> afterHooks = new ArrayList<AfterHook>();
+	private List<Step> steps = new ArrayList<Step>();
+	private List<Tag> tags = new ArrayList<Tag>();
+	private String runResult;
+	private String outputPath;
 
-    // CONSTRUCTOR
-    public ScenarioImpl(String scenarioName, 
-                    String uri, 
-                    String scenarioType, 
-                    JSONArray scenarioSteps, 
-                    JSONArray scenarioBeforeHooks,
-                    JSONArray scenarioAfterHooks, 
-                    JSONArray tags
-                   ) throws NullPointerException {
+	// CONSTRUCTOR
+	public ScenarioImpl(String scenarioName, String uri, String scenarioType, JSONArray scenarioSteps,
+			JSONArray scenarioBeforeHooks, JSONArray scenarioAfterHooks, JSONArray tags) throws NullPointerException {
 
-        log.debug("Scenario constructor start: " + scenarioName);
-        log.debug("Scenario type: " + scenarioType);
-        
-        if (scenarioSteps == null) {
-            throw new NullPointerException("This scenario doesn't seem to contain any steps! Skipping...");
-        }
+		log.debug("Scenario constructor start: " + scenarioName);
+		log.debug("Scenario type: " + scenarioType);
 
-        this.scenarioName = scenarioName;
-        this.scenarioType = scenarioType;
-        this.uri = uri;
+		if (scenarioSteps == null) {
+			throw new NullPointerException("This scenario doesn't seem to contain any steps! Skipping...");
+		}
 
-        List<JSONObject> stepsJSON = new ArrayList<JSONObject>(scenarioSteps);
-        List<JSONObject> beforeHooksJSON = new ArrayList<JSONObject>(scenarioBeforeHooks);
-        List<JSONObject> afterHooksJSON = new ArrayList<JSONObject>(scenarioAfterHooks);
-        List<JSONObject> tagsJSON = new ArrayList<JSONObject>();
-        if (tags != null) {
-            tagsJSON = new ArrayList<JSONObject>(tags);
-        }
-        
-        log.debug("Adding steps");
-        for (JSONObject ob : stepsJSON) {
-            String name = (String) ob.get("name");
-            JSONObject result = (JSONObject) ob.get("result");
-                      
-            try {
-                outputPath = ob.get("output").toString();
-                
-            } catch (Throwable e) {
-                
-            }
-            
-            steps.add(new Step(name, result, outputPath));
-        }
+		this.scenarioName = scenarioName;
+		this.scenarioType = scenarioType;
+		this.uri = uri;
 
-        log.debug("Adding beforeHooks");
-        for (JSONObject ob : beforeHooksJSON) {
-            JSONObject result = (JSONObject) ob.get("result");
-            JSONObject match = (JSONObject) ob.get("match");
+		List<JSONObject> stepsJSON = new ArrayList<JSONObject>(scenarioSteps);
+		List<JSONObject> beforeHooksJSON = new ArrayList<JSONObject>(scenarioBeforeHooks);
+		List<JSONObject> afterHooksJSON = new ArrayList<JSONObject>(scenarioAfterHooks);
+		List<JSONObject> tagsJSON = new ArrayList<JSONObject>();
+		if (tags != null) {
+			tagsJSON = new ArrayList<JSONObject>(tags);
+		}
 
-            Long duration = (Long) result.get("duration");
-            String status = (String) result.get("status");
-            String location = (String) match.get("location");
+		// Adding steps
+		for (JSONObject ob : stepsJSON) {
+			String name = (String) ob.get("name");
+			JSONObject result = (JSONObject) ob.get("result");
 
-            beforeHooks.add(new BeforeHook(duration, status, location));
+			try {
+				outputPath = ob.get("output").toString();
 
-            if ("pending".equalsIgnoreCase(status)) {
-                runResult = "Pending";
-            }
-        }
+			} catch (Throwable e) {
 
-        log.debug("Adding afterHooks");
-        for (JSONObject ob : afterHooksJSON) {
-            JSONObject result = (JSONObject) ob.get("result");
-            JSONObject match = (JSONObject) ob.get("match");
+			}
 
-            Long duration = (Long) result.get("duration");
-            String status = (String) result.get("status");
-            String location = (String) match.get("location");
+			steps.add(new Step(name, result, outputPath));
+		}
 
-            afterHooks.add(new AfterHook(duration, status, location));
-        }
-        
-        log.debug("Adding tags");
-        for (JSONObject ob : tagsJSON) {
-            String name = (String) ob.get("name").toString().substring(1);
-            
-            if ("Classes".equals(name)) {
-                this.tags.add(Tag.Classes);
-            }
-            else if ("Communities".equals(name)) {
-                this.tags.add(Tag.Communities);
-            }
-            else if ("Core".equals(name)) {
-                this.tags.add(Tag.Core);
-            }
-            else if ("Discussions".equals(name)) {
-                this.tags.add(Tag.Discussions);
-            }
-            else if ("Feedback".equals(name)) {
-                this.tags.add(Tag.Feedback);
-            }
-            else if ("KnownIssue".equals(name)) {
-                this.tags.add(Tag.KnownIssue);
-            }
-            else if ("LearningContent".equals(name)) {
-                this.tags.add(Tag.LearningContent);
-            }
-            else if ("Manual".equals(name)) {
-                this.tags.add(Tag.Manual);
-            }
-            else if ("Marksbook".equals(name)) {
-                this.tags.add(Tag.Marksbook);
-            }
-            else if ("Notices".equals(name)) {
-                this.tags.add(Tag.Notices);
-            }
-            else if ("RequiresHover".equals(name)) {
-                this.tags.add(Tag.RequiresHover);
-            }
-            else if ("Submissions".equals(name)) {
-                this.tags.add(Tag.Submissions);
-            }
-            else if ("smoke".equals(name)) {
-                this.tags.add(Tag.smoke);
-            }
-            
-            
-        }
+		// Adding beforeHooks
+		for (JSONObject ob : beforeHooksJSON) {
+			JSONObject result = (JSONObject) ob.get("result");
+			JSONObject match = (JSONObject) ob.get("match");
 
-        if (!"pending".equalsIgnoreCase(runResult)) {
+			Long duration = (Long) result.get("duration");
+			String status = (String) result.get("status");
+			String location = (String) match.get("location");
 
-            runResult = "Pass";
-            for (Step step : steps) {
-                if (step.isFailed() || step.isSkipped() || step.isUndefined()) {
-                    runResult = "Fail";
-                    continue;
-                }
-            }
-        }
-    }
+			beforeHooks.add(new BeforeHook(duration, status, location));
 
-    public boolean isFailed() {
-        for (Step step : steps) {
-            if (step.isFailed()) {
-                return true;
-            }
+			if ("pending".equalsIgnoreCase(status)) {
+				runResult = "Pending";
+			}
+		}
 
-        }
-        return false;
-    }
-    
-    private Step getLastStep() {
-        return steps.get(steps.size() - 1);
-    }
-    
-    @Override
-    public String getScreenShotPath() {
-        Step step = getLastStep();
-        
-        return step.getOutput();
-    }
+		// Adding afterHooks
+		for (JSONObject ob : afterHooksJSON) {
+			JSONObject result = (JSONObject) ob.get("result");
+			JSONObject match = (JSONObject) ob.get("match");
 
-    @Override
-    public String generateUriScenarioPair() {
-        return uri + "," + scenarioName;
-    }
+			Long duration = (Long) result.get("duration");
+			String status = (String) result.get("status");
+			String location = (String) match.get("location");
 
-    @Override
-    public String getScenarioType() {
-        return scenarioType;
-    }
+			afterHooks.add(new AfterHook(duration, status, location));
+		}
 
-    @Override
-    public String getScenarioName() {
-        return scenarioName;
-    }
+		// Adding tags
+		for (JSONObject ob : tagsJSON) {
+			String name = (String) ob.get("name").toString().substring(1);
 
-    @Override
-    public String getUri() {
-        return uri;
-    }
+			if ("Classes".equals(name)) {
+				this.tags.add(Tag.Classes);
+			} else if ("Communities".equals(name)) {
+				this.tags.add(Tag.Communities);
+			} else if ("Core".equals(name)) {
+				this.tags.add(Tag.Core);
+			} else if ("Discussions".equals(name)) {
+				this.tags.add(Tag.Discussions);
+			} else if ("Feedback".equals(name)) {
+				this.tags.add(Tag.Feedback);
+			} else if ("KnownIssue".equals(name)) {
+				this.tags.add(Tag.KnownIssue);
+			} else if ("LearningContent".equals(name)) {
+				this.tags.add(Tag.LearningContent);
+			} else if ("Manual".equals(name)) {
+				this.tags.add(Tag.Manual);
+			} else if ("Marksbook".equals(name)) {
+				this.tags.add(Tag.Marksbook);
+			} else if ("Notices".equals(name)) {
+				this.tags.add(Tag.Notices);
+			} else if ("RequiresHover".equals(name)) {
+				this.tags.add(Tag.RequiresHover);
+			} else if ("Submissions".equals(name)) {
+				this.tags.add(Tag.Submissions);
+			} else if ("smoke".equals(name)) {
+				this.tags.add(Tag.smoke);
+			}
 
-    @Override
-    public String getRunResult() {
-        return runResult;
-    }
-    
-    @Override
-    public List<Tag> getTags() {
-        return tags;
-    }
+		}
 
+		if (!"pending".equalsIgnoreCase(runResult)) {
+
+			runResult = "Pass";
+			for (Step step : steps) {
+				if (step.isFailed() || step.isSkipped() || step.isUndefined()) {
+					runResult = "Fail";
+					continue;
+				}
+			}
+		}
+	}
+
+	public boolean isFailed() {
+		for (Step step : steps) {
+			if (step.isFailed()) {
+				return true;
+			}
+
+		}
+		return false;
+	}
+
+	private Step getLastStep() {
+		return steps.get(steps.size() - 1);
+	}
+
+	@Override
+	public String getScreenShotPath() {
+		Step step = getLastStep();
+
+		return step.getOutput();
+	}
+
+	@Override
+	public String generateUriScenarioPair() {
+		return uri + "," + scenarioName;
+	}
+
+	@Override
+	public String getScenarioType() {
+		return scenarioType;
+	}
+
+	@Override
+	public String getScenarioName() {
+		return scenarioName;
+	}
+
+	@Override
+	public String getUri() {
+		return uri;
+	}
+
+	@Override
+	public String getRunResult() {
+		return runResult;
+	}
+
+	@Override
+	public List<Tag> getTags() {
+		return tags;
+	}
 }
