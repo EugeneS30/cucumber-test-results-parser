@@ -28,6 +28,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.github.eugene.config.PropertiesContainer;
 import com.github.eugene.containers.Scenario;
 import com.github.eugene.containers.Tag;
 import com.github.eugene.containers.UniqueScenario;
@@ -63,8 +64,8 @@ public class ExcelProcessor {
 
     static String fileName = "results.xlsx";
     static FileOutputStream fileOut;
-
-    static String URL = "http://10.25.67.130:8080/job/Connect%20Automated%20Functional%20Tests%20-%20Firefox%2032/";
+    
+    private final static String URL = PropertiesContainer.getProperty("URL");
 
     public static void prepareProcessor(List<Integer> allBuildsNumbersList, SortedSet<String> uniqueScenarioNamesSet) {
 
